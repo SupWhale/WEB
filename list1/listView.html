@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Notice</title>
+    <script type="text/javascript" src="..\src\jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="..\src\bootstrap-3.3.2-dist\css\bootstrap.css">
+    <style>
+      .replyPage button{
+        width: 80px;
+        margin: auto;
+        display: inline-block;
+      }
+      .reply button{
+        width: 80px;
+        margin: 10px;
+        display: inline-block;
+      }      
+      .contentLine{
+        margin-top: 200px;
+      }
+      .content{
+        margin: auto;
+        margin-top: 50px;
+      }
+      #replyLine{
+        margin-top: -10px;
+      }
+      #replyLine2{
+        margin-bottom: 5px;
+      }
+      #pageLine{
+        margin-bottom: 20px;
+      }
+      
+    </style>
+    <script type="text/javascript">
+      function reply(){
+        $('.reply_window').append(
+          "<hr id="+replyLine2+"><p align="+"left"+">Admin</p>"
+          +"<hr id="+"replyLine"+">"
+          +"<p align="+"left"+">"+$('.reply_content').val()+"</p>");
+          $('.replyPage button').remove();
+          setPage();
+        }
+      function setPage(){
+        var PageNo = Math.ceil(($('.reply_window p').length/2)/5); //전체 글 개수 처리
+        $('.replyPage').append("<button class="+"list-group-item"+" onclick="+"PageStep(1)"+" value="+"이전"+">이전</button>");
+        for(var i=1; i<=PageNo; i++){
+          if(i == PageNo){
+            $('.replyPage').append("<button id="+i+" class="+"list-group-item"+" onclick="+"MakePage("+i+")"+" href=#>"+i+"</button>"); //전체 글 개수 나누기 10한 값으로 목록 번호 생성			    
+          }
+          else {
+            $('.replyPage').append("<button id="+i+" class="+"list-group-item"+" onclick="+"MakePage("+i+")"+" href=#>"+i+"</button>&nbsp;"); //전체 글 개수 나누기 10한 값으로 목록 번호 생성			    
+          }
+        }
+        $('.replyPage').append("<button class="+"list-group-item"+" onclick="+"PageStep(2)"+" value="+"다음"+">다음</button>");
+        $('#'+1).addClass("active");  //페이지 최초 로딩시 첫번째 자식에 active 클래스 생성
+        MakePage($('.active').text());    
+      }
+
+      function MakePage(value){
+        $('.reply_window p').hide();                   //모든 테이블 숨김 처리
+        $('.reply_window hr').hide();
+        var start = (value-1)*10;               //출력될 글의 시작점과 끝지점 처리
+        var end = value*10;
+        var result = $('.active').text();
+        $('.active').removeClass();
+        $('#'+result).addClass('list-group-item');
+        $('#'+value).addClass('list-group-item active');  
+          for(var i=start; i<end; i++){
+            $('.reply_window p').eq(i).show(); //지정된 글 출력
+            $('.reply_window hr').eq(i).show();
+          }   
+        }
+
+        function PageStep(option){
+          var answer = $('.active').text();
+          var PageNo = Math.ceil(($('.reply_window p').length/2)/5); //전체 글 개수 처리
+          var result;
+          if(option == 1){result = parseInt(answer)-1;  }
+          else {result = parseInt(answer)+1; }
+
+          if(result <= 0){
+              alert("첫번째 페이지입니다!");
+              result = 1;                          //첫번
+              return
+            }
+          else if(result > PageNo){
+             result = PageNo;
+             alert("마지막 페이지입니다!");
+             return; 
+            }
+            MakePage(result);
+        }
+    </script>  
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+          <div class="content" align="center">
+            <h3 class="border-bottom col-md-4" align="left">Notice</h3>
+            <table class="table" >
+              <tr>
+                <td class="text-right">작성자: Admin</td>
+                <td class="text-right">작성일: 2022.02.21</td>
+                <td class="text-right">조회수: 3</td>
+              </tr>
+            </table>
+            <p class="col-md-4" align="left">test content</p>
+            <hr class="contentLine">
+            <textarea class="reply_content form-control" name="content" rows="5" cols="70" ></textarea>
+            <div class="reply text-right">
+              <button class="list-group-item" onclick="reply()" value="등록">등록</button>
+            </div>
+            <div class="reply_window" align="center">
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">첫번째 댓글</p>
+
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">두번째 댓글</p>
+              
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">세번째 댓글</p>
+
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">네번째 댓글</p>
+
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">다섯번째 댓글</p>
+
+              <hr id="replyLine2">
+              <p align="left">Admin</p>
+              <hr id="replyLine">
+              <p align="left">여섯번째 댓글</p>  
+            </div>
+            <hr id="pageLine">
+          </div>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-md-14 text-center">
+        <ul class="list-group list-group-horizontal">
+          <div class="replyPage"> <!--댓글이 생성될 구역-->
+
+          </div>
+        </ul>
+      </div>            
+    </div>
+  </div>
+  <div align="center">
+    <br>
+      <!--글 목록으로 되돌아가는 버튼입니다.-->
+      <button class="list-group-item" onclick="location.href='../list.html';">되돌아가기</button>
+  </div>
+  <script>
+    setPage();
+  </script>
+  </body>
+</html>
